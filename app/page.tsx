@@ -1,6 +1,7 @@
 "use client"
 
 import type React from "react"
+import Link from "next/link"
 
 import { Suspense, useRef, useState, useEffect } from "react"
 import { Canvas, useFrame, useThree } from "@react-three/fiber"
@@ -557,30 +558,30 @@ function Header({
         </div>
 
         <nav className="hidden md:flex items-center space-x-8">
-          <button
-            onClick={() => setCurrentPage("home")}
+          <Link
+            href="/"
             className={`transition-colors ${currentPage === "home" ? "text-orange-500" : "text-white/80 hover:text-white"}`}
           >
             {t.home}
-          </button>
-          <button
-            onClick={() => setCurrentPage("about")}
+          </Link>
+          <Link
+            href="/about"
             className={`transition-colors ${currentPage === "about" ? "text-orange-500" : "text-white/80 hover:text-white"}`}
           >
             {t.aboutUs}
-          </button>
-          <button
-            onClick={() => setCurrentPage("products")}
+          </Link>
+          <Link
+            href="/products"
             className={`transition-colors ${currentPage === "products" ? "text-orange-500" : "text-white/80 hover:text-white"}`}
           >
             {t.products}
-          </button>
-          <button
-            onClick={() => setCurrentPage("contact")}
+          </Link>
+          <Link
+            href="/contact"
             className={`transition-colors ${currentPage === "contact" ? "text-orange-500" : "text-white/80 hover:text-white"}`}
           >
             {t.contact}
-          </button>
+          </Link>
         </nav>
 
         {/* Language switcher */}
