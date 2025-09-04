@@ -230,6 +230,12 @@ function Car({
   const modelColors = ["#c0c0c0", "#8b0000", "#ffffff"]
   const models = selectedBrand ? (translations.en.models as any)[selectedBrand] || [] : []
 
+  const getCarScale = () => {
+    if (step === 1) return [1.5, 1.5, 1.5] // Bigger during plate entry
+    if (step >= 2 && step <= 3) return [1.2, 1.2, 1.2] // Medium size for brand/model selection
+    return [1, 1, 1] // Normal size for other steps
+  }
+
   useFrame(() => {
     if (carRef.current) {
       if (step >= 1 && step <= 3) {
@@ -290,7 +296,18 @@ function Car({
   }
 
   return (
-    <group ref={carRef} position={[0, -0.5, 0]}>
+    <group ref={carRef} position={[0, -0.5, 0]} scale={getCarScale()}>
+      {step === 1 && (
+        <SpotLight
+          position={[0, 3, 3]}
+          angle={0.4}
+          penumbra={0.3}
+          intensity={3}
+          color="#ffffff"
+          target-position={[0, -0.2, 2.1]}
+        />
+      )}
+
       {/* Car body */}
       <mesh position={[0, 0, 0]} scale={[2, 0.8, 4]}>
         <boxGeometry args={[1, 1, 1]} />
@@ -303,23 +320,31 @@ function Car({
         <meshStandardMaterial color="#1a1a1a" transparent opacity={0.3} />
       </mesh>
 
-      {/* Front license plate */}
       {plateNumber && (
-        <mesh position={[0, -0.2, 2.1]} scale={[0.8, 0.3, 0.05]}>
-          <boxGeometry args={[1, 1, 1]} />
-          <meshStandardMaterial color="#ffffff" />
-        </mesh>
+        <>
+          {/* License plate background with border */}
+          <mesh position={[0, -0.2, 2.12]} scale={[1.0, 0.4, 0.02]}>
+            <boxGeometry args={[1, 1, 1]} />
+            <meshStandardMaterial color="#000000" />
+          </mesh>
+          {/* Main license plate */}
+          <mesh position={[0, -0.2, 2.13]} scale={[0.9, 0.35, 0.02]}>
+            <boxGeometry args={[1, 1, 1]} />
+            <meshStandardMaterial color="#ffffff" emissive="#ffffff" emissiveIntensity={0.1} />
+          </mesh>
+        </>
       )}
 
-      {/* Plate number text */}
       {plateNumber && (
         <Text
           position={[0, -0.2, 2.15]}
-          fontSize={0.15}
+          fontSize={step === 1 ? 0.12 : 0.08}
           color="#000000"
           anchorX="center"
           anchorY="middle"
           font="/fonts/Inter_Bold.json"
+          outlineWidth={0.002}
+          outlineColor="#ffffff"
         >
           {plateNumber}
         </Text>
@@ -454,23 +479,31 @@ function CarModel({
         <meshStandardMaterial color="#1a1a1a" transparent opacity={0.3} />
       </mesh>
 
-      {/* Front license plate */}
       {plateNumber && isSelected && (
-        <mesh position={[0, -0.2, 2.1]} scale={[0.8, 0.3, 0.05]}>
-          <boxGeometry args={[1, 1, 1]} />
-          <meshStandardMaterial color="#ffffff" />
-        </mesh>
+        <>
+          {/* License plate background with border */}
+          <mesh position={[0, -0.2, 2.12]} scale={[1.0, 0.4, 0.02]}>
+            <boxGeometry args={[1, 1, 1]} />
+            <meshStandardMaterial color="#000000" />
+          </mesh>
+          {/* Main license plate */}
+          <mesh position={[0, -0.2, 2.13]} scale={[0.9, 0.35, 0.02]}>
+            <boxGeometry args={[1, 1, 1]} />
+            <meshStandardMaterial color="#ffffff" emissive="#ffffff" emissiveIntensity={0.1} />
+          </mesh>
+        </>
       )}
 
-      {/* Plate number text */}
       {plateNumber && isSelected && (
         <Text
           position={[0, -0.2, 2.15]}
-          fontSize={0.15}
+          fontSize={0.1}
           color="#000000"
           anchorX="center"
           anchorY="middle"
           font="/fonts/Inter_Bold.json"
+          outlineWidth={0.002}
+          outlineColor="#ffffff"
         >
           {plateNumber}
         </Text>
